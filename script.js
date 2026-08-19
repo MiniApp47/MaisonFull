@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
             type: 'Jaune Mousseux',
             quality: '🍯 JAUNE MOUSSEUX',
             theme: 'jaune',
-            image: 'CategJauneMousseux.jpg',
+            image: 'CategJM.png',
             products: [
                 {
                     id: 'jaune-mousseux',
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
             type: 'Filtré',
             quality: '💎 FILTRÉ',
             theme: 'filtre',
-            image: 'CategFiltre.jpg',
+            image: 'CategFilter.png',
             products: [
                 {
                     id: 'filtre-premium',
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
             type: 'Static',
             quality: '⚡ STATIC',
             theme: 'static',
-            image: 'CategStatic.jpg',
+            image: 'CategStatic.png',
             products: []
         },
         {
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
             type: 'Frozen',
             quality: '❄️ FROZEN',
             theme: 'frozen',
-            image: 'CategFrozen.jpg',
+            image: 'CategFrozen.png',
             products: []
         },
         {
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
             type: 'Weed',
             quality: '🌿 WEED',
             theme: 'weed',
-            image: 'CategWeed.jpg',
+            image: 'CategWeed.png',
             farms: [
                 {
                     id: 'HAZE',
