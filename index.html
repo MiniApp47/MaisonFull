@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>MaisonFull</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            /* Palette de couleurs inspirée de tes captures */
+            --background-color: #1c1c1d;
+            --secondary-bg-color: #2c2c2e;
+            --tertiary-bg-color: #3a3a3c;
+            --text-color: #ffffff;
+            --hint-color: #8e8e93;
+            --accent-color: #00c7be;
+            --green-color: #34c759;
+            --red-color: #ff3b30;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            /* Couleur de fond si l'image ne charge pas */
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            overscroll-behavior-y: none;
+            /* Empêche le "rebond" sur iOS */
+
+            /* --- MODIFICATION POUR LE FOND D'ÉCRAN --- */
+            /* Remplace 'fond-ecran.jpg' par le nom de ton image */
+            background-image: radial-gradient(circle at 12% 8%, rgba(218, 132, 239, 0.55), transparent 34%), radial-gradient(circle at 88% 12%, rgba(119, 190, 255, 0.55), transparent 38%), linear-gradient(160deg, #efe7ff 0%, #dfeaff 48%, #f9d9ef 100%);
+            background-size: cover;
+            /* L'image couvre tout l'espace */
+            background-position: center center;
+            /* L'image est centrée */
+            background-repeat: no-repeat;
+            /* L'image ne se répète pas */
+            background-attachment: fixed;
+            /* L'image reste fixe au défilement */
+            margin-bottom: 8vh;
+        }
+
+        /* --- Structure générale des pages --- */
+        .page {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        .page-header {
+            padding: 2vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(#012e5129, transparent);
+            height: 6vh;
+        }
+
+        .page-header .title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            width: 100%;
+    font-family: Optima, sans-serif;
+    text-align: center;
+        }
+
+        .close-button,
+        .back-button {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .page-content {
+            flex-grow: 1;
+            padding: 1.5vh;
+        }
+
+        /* --- Écran de chargement --- */
+        #page-loader {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+        }
+
+        #page-loader .loader-box {
+            background: #0a5fa129;
+            padding: 30px;
+            border-radius: 20px;
+            height: 25vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #7dc0ff;
+        }
+
+        #page-loader img {
+            width: 80px;
+            height: 80px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        #page-loader .app-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            /*             font-family: Chalkduster, fantasy;
+ */
+        }
+
+        #page-loader .loading-text {
+            color: var(--hint-color);
+            margin-top: 10px;
+            /*             font-family: URW Chancery L, cursive;
+ */
+        }
+
+        /* --- Page d'accueil --- */
+        .top-marquee {
+            background-color: var(--tertiary-bg-color);
+            color: #7dc0ff;
+            padding: 8px 0;
+            overflow: hidden;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 15s linear infinite;
+        }
+
+        .marquee-content span {
+            display: inline-block;
+            padding-right: 200px;
+            /* Espace entre les deux phrases */
+            white-space: nowrap;
+            /* Empêche le texte de se couper */
+            font-size: 15px;
+
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(100vw);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        #page-home .home-header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px 15px;
+            background: linear-gradient(#012e5185, transparent);
+            position: relative;
+            height: 11vh;
+        }
+
+        .home-logo {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            height: 14vh;
+            border-radius: 25px;
+            box-shadow: 0px 0px 10px 2px #7dc0ff;
+        }
+
+        #page-home .cart-button {
+            background: var(--tertiary-bg-color);
+            border: none;
+            border-radius: 10px;
+    width: 6vh;
+    height: 5vh;
+            color: white;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            /* MODIFIÉ pour l'afficher */
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 0px 10px 2px #7dc0ff;
+        }
+
+        #quality-filter {
+            font-family: Copperplate;
+            /*             padding-left: 0px;
+ */
+            height: 7vh;
+            font-size: 1.8vh;
+            /*    margin-left: 8vh;
+             border-left: 1px solid grey; */
+            width: 100%;
+            text-align: center;
+    background: linear-gradient(45deg, black, transparent);
+        }
+
+        #quality-filter option {
+            text-align: center;
+
+        }
+
+
+        .farm-card {
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+
+        }
+
+        .farm-card img {
+            width: 95%;
+            height: 20vh;
+            ;
+            object-fit: cover;
+            border-radius: 20px;
+            margin: auto;
+            display: block;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 15px;
+            padding: 0 15px 80px 15px;
+            margin-top: 5vh;
+        }
+
+        .category-card {
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .category-card img {
+            width: 95%;
+            height: 25vh;
+            object-fit: cover;
+            border-radius: 20px;
+            margin: auto;
+            display: block;
+        }
+
+        .cart-button .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #7dc0ff;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+        }
+
+        /* Style des filtres */
+        #page-home .filters {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .filter-input-wrapper,
+        .filter-select-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--secondary-bg-color);
+            border-radius: 10px;
+            margin-top: 3vh;
+            justify-content: center;
+            border-radius: 20px;
+            width: 80%;
+        }
+
+        .filter-select-wrapper::after {
+            /* Crée la flèche du select */
+            content: '▾';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--hint-color);
+            pointer-events: none;
+        }
+
+        .filter-input-wrapper input,
+        .filter-select-wrapper select {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            padding-left: 4vh;
+            padding-right: 40px;
+            border: none;
+            color: var(--text-color);
+            font-size: 1rem;
+            appearance: none;
+            -webkit-appearance: none;
+            border-radius: 0;
+            line-height: normal;
+            height: auto;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid #7dc0ff;
+    background: linear-gradient(45deg, black, transparent);
+        }
+
+        .filter-input-wrapper input::placeholder {
+            color: var(--hint-color);
+            opacity: 1;
+        }
+
+        .filter-input-wrapper svg,
+        .filter-select-wrapper svg {
+            position: absolute;
+            left: 3vh;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--hint-color);
+            margin-right: 3.5vh;
+            z-index: 2;
+            /* <-- AJOUTE ÇA */
+        }
+
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 25px;
+            padding: 0 15px 80px 15px;
+            margin-top: 3vh;
+        }
+
+        .product-card {
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            border: 2px solid #7dc0ff;
+    background: linear-gradient(#e6683cd6, #00c7bed1);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            /* Petite ombre */
+            color: white;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .product-flag {
+            margin-left: 5px;
+            font-size: 3vh;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #2c2c2edb;
+            height: auto;
+            width: 35px;
+            border-radius: 20%;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .product-card .info {
+            padding: 10px;
+        }
+
+        .product-card .name {
+            font-weight: 500;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            height: 6vh;
+            text-align: center;
+            font-family: American Typewriter, serif	;
+            font-size: 14px;
+            margin-bottom: 2vh;
+            color: black;
+        }
+
+        .product-card .farm {
+            color: #f8bd06;
+            font-size: 0.8rem;
+            text-align: center;
+            border-bottom: 1px solid #f8bd06;
+            margin-bottom: 5px;
+        }
+
+        .product-card .price {
+            text-align: end;
+            font-family: monospace;
+            color: black;
+        }
+
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: var(--hint-color);
+            grid-column: 1 / -1;
+            /* Prend toute la largeur */
+        }
+
+        /* Barre de navigation en bas */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            background: #2c2c2ea1;
+            align-items: center;
+            padding: 10px 0;
+            z-index: 50;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--hint-color);
+            text-decoration: none;
+            font-size: 0.7rem;
+            background: #8080807d;
+            border-radius: 20px;
+            /* height: 5vh; */
+            width: 12vh;
+            color: #012e51;
+    padding: 1vh;
+    border: none;
+    box-shadow: 0px 0px 10px 2px #7dc0ff;
+    cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: #00c7be;
+            background-color: #0000009c;
+        }
+
+        .nav-item svg {
+            margin-bottom: 5px;
+        }
+
+        /* Page Produit */
+        #page-product .product-video {
+            width: 85%;
+            display: block;
+            margin: auto;
+            aspect-ratio: 9 / 16;
+            background: #000;
+            border-radius: 20px;
+        }
+
+        #page-product .product-details {
+            padding: 15px;
+        }
+
+        .product-details .name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: cursive;
+        }
+
+        .product-details .farm {
+            color: #f09433;
+        }
+
+        .product-details .tarifs-title {
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+        .tarif-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--secondary-bg-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .add-to-cart-btn {
+            background: linear-gradient(black, transparent);
+            border: 1px solid #00c7be;
+    border-radius: 8px;
+    color: #00c7be;
+            width: 50%;
+            height: 5vh;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-top: 1vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Page Panier & Confirmation */
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--tertiary-bg-color);
+        }
+
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .cart-item .item-details {
+            flex-grow: 1;
+            background-color: #2c2c2ed9;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px;
+            font-family: New Century Schoolbook, TeX Gyre Schola, serif;
+            padding: 1vh;
+
+        }
+
+        .cart-item .name {
+            font-weight: 500;
+            font-family: cursive;
+            margin-bottom: 1vh;
+            margin-top: 1vh;
+
+        }
+
+        .cart-item .gram {
+            font-family: New Century Schoolbook, TeX Gyre Schola, serif;
+            margin-bottom: 1vh;
+        }
+
+        .cart-item .price {
+            color: #7dc0ff;
+            font-weight: 700;
+            margin-bottom: 1vh;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            background: var(--tertiary-bg-color);
+            border-radius: 8px;
+        }
+
+        .quantity-selector button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .quantity-selector .quantity {
+            padding: 0 10px;
+        }
+
+        .cart-summary {
+            background: #7dc0ffb5;
+            color: #000000;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: New Century Schoolbook, TeX Gyre Schola, serif;
+            text-align: center;
+
+        }
+
+
+        #page-confirmation .cart-total {
+            background: var(--secondary-bg-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            font-family: Optima, sans-serif;
+        }
+
+        #page-cart .cart-total {
+            background: var(--secondary-bg-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            font-family: Optima, sans-serif;
+        }
+
+        .cart-actions {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 8vh;
+        }
+
+        .main-action-btn {
+            background: #7dc0ffcc;
+            color: #000;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .secondary-action-btn {
+            background: var(--secondary-bg-color);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .main-action-btn:disabled,
+        .secondary-action-btn:disabled {
+            background: var(--tertiary-bg-color);
+            /* Un gris foncé */
+            color: var(--hint-color);
+            opacity: 0.6;
+            cursor: not-allowed;
+            /* Change le curseur pour montrer qu'il est bloqué */
+        }
+
+
+        #page-product .product-details {
+            background: rgba(44, 44, 46, 0.85) !important;
+            /* Fond semi-transparent */
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border-radius: 20px !important;
+            padding: 20px !important;
+            margin-top: 20px !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #page-product .product-details-card .name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        #page-product .product-details-card .farm {
+            font-size: 1rem;
+            color: var(--hint-color);
+            margin-bottom: 25px;
+        }
+
+        #page-product .product-details-card .tarifs-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+            border-top: 1px solid var(--tertiary-bg-color);
+            padding-top: 20px;
+        }
+
+/* --- STYLE LISTE SOUS-CATÉGORIES (Style Pistachio) --- */
+.farm-list-btn {
+    background: linear-gradient(145deg, #2c2c2e, #1c1c1d);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    min-height: 70px;
+}
+
+.farm-list-btn:active {
+    transform: scale(0.98);
+    background: #3a3a3c;
+}
+
+.farm-btn-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.farm-btn-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.farm-btn-title {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.farm-btn-subtitle {
+    color: #e605c0; /* Rose Punch68 */
+    font-size: 0.85rem;
+    margin-top: 3px;
+    display: none;
+}
+
+.farm-btn-right svg {
+    stroke: #888;
+}
+
+        /* --- AJOUTE CE STYLE POUR LA DESCRIPTION --- */
+.product-description {
+    font-size: 0.95rem;
+    color: #ffffff; /* Ajusté pour la lisibilité */
+    margin-top: 15px;
+    margin-bottom: 20px;
+    line-height: 1.4;
+    border-top: 1px solid var(--tertiary-bg-color);
+    padding-top: 20px;
+    white-space: pre-wrap; /* INDISPENSABLE : Active les retours à la ligne */
+    text-align: center;     /* Mieux pour les listes d'arômes */
+    font-family: "Georgia", serif;
+}
+
+        /* On retire le fond des items de tarif car la carte s'en charge */
+        .tarif-item {
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+            border-radius: 20px;
+            background: linear-gradient(#e6683cbf, #7dc0ff99);
+    border: 2px solid #7dc0ff;
+            width: 90%;
+            height: 4vh;
+        }
+
+        /* --- NOUVEAU STYLE POUR LA NOTIFICATION --- */
+        #notification-toast {
+            visibility: hidden;
+            /* Caché par défaut */
+            min-width: 250px;
+            background-color: #7dc0ffb8;
+            color: #fff;
+            text-align: center;
+            border-radius: 10px;
+            padding: 16px;
+            position: fixed;
+            z-index: 101;
+            /* Au-dessus de tout */
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 30px;
+            font-size: 1rem;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: visibility 0.5s, opacity 0.5s, transform 0.5s;
+        }
+
+        #notification-toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+
+
+        .instagram-button {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
+
+
+
+        .box-tarif {
+            display: flex;
+            font-size: 30px;
+            justify-content: space-around;
+            width: 90%;
+            font-family: Impact, fantasy;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .box-tarif .tarif-wieght {
+            border-bottom: 1px solid black;
+            color: black;
+            width: 80%;
+            text-align: center;
+            /* margin-bottom: 1vh; */
+            height: 3.5vh;
+            padding: 1vh;
+        }
+
+        .box-tarif .tarif-price {
+            border-bottom: 1px solid black;
+            color: black;
+            width: 80%;
+            text-align: center;
+            /* margin-bottom: 1vh; */
+            height: 3.5vh;
+            margin-top: 1vh;
+            padding: 1vh;
+        }
+
+
+        /* --- NOUVEAU STYLE POUR LA PAGE INFO --- */
+        #page-info .page-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 1vh;
+        }
+
+        #page-info .contact-logo {
+            position: unset;
+            height: 14vh;
+            border-radius: 25px;
+            margin-bottom: 9vh;
+            box-shadow: 0px 0px 10px 2px #7dc0ff;
+}
+
+        #page-info .contact-card {
+            background: rgba(44, 44, 46, 0.8);
+            /* Fond semi-transparent */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-top: 2vh;
+
+        }
+
+
+
+
+        /* --- NOUVEAU STYLE POUR LA PAGE CONTACT --- */
+        #page-contact .page-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 1vh;
+        }
+
+        #page-contact .contact-logo {
+            width: 100px;
+            height: 15vh;
+            width: 15vh;
+            margin-bottom: 6vh;
+            border-radius: 25%;
+            box-shadow: 0px 0px 10px 2px #7dc0ff;
+            margin-top: 2vh;
+        }
+
+        #page-contact .contact-card {
+            background: rgba(44, 44, 46, 0.8);
+            /* Fond semi-transparent */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-top: 5vh;
+
+        }
+
+        .contact-links-list a {
+            align-items: center;
+            padding: 15px;
+            background: var(--tertiary-bg-color);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: background-color 0.2s ease;
+            height: 5vh;
+            display: flex;
+            justify-content: center;
+            font-size: 3vh;
+        }
+
+        .contact-links-list a:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-links-list a:hover {
+            background-color: #4a4a4c;
+        }
+
+
+       /* --- COULEURS ET DÉGRADÉS RÉSEAUX --- */
+.contact-link.instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+.contact-link.snapchat { background: linear-gradient(45deg, #fffc00 0%, #6f5900 100%); color: #000 !important; }
+.contact-link.whatsapp { background: linear-gradient(45deg, #25d366 0%, #128c7e 100%); }
+
+/* Ajustement global des liens pour la lisibilité */
+.contact-links-list a {
+    font-weight: 800;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 12px;
+}
+        /* --- NOUVEAU STYLE POUR L'ACCORDÉON --- */
+        .accordion-container {
+            width: 100%;
+            text-align: center;
+
+        }
+
+        .accordion-item {
+            background: var(--secondary-bg-color);
+            border-radius: 15px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            border: 1px solid var(--tertiary-bg-color);
+        }
+
+        .accordion-header {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            background: var(--secondary-bg-color);
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-color);
+            cursor: pointer;
+            text-align: left;
+            height: 11vh;
+        }
+
+        .accordion-header .accordion-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 20%;
+            margin-right: 15px;
+            border: 1px solid red;
+            box-shadow: 0px 0px 5px 2px red;
+        }
+
+        .accordion-header span {
+            flex-grow: 1;
+            text-align: center;
+            /* Pousse la flèche à droite */
+        }
+
+        .accordion-header .accordion-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-arrow {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            background: var(--tertiary-bg-color);
+        }
+
+        .accordion-content p {
+            padding: 15px;
+            margin: 0;
+            color: var(--hint-color);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 500px;
+            /* Hauteur max pour l'animation */
+            padding-top: 0;
+        }
+
+        /* Style pour la ligne de séparation */
+        .contact-divider {
+            border: none;
+            border-top: 1px solid var(--tertiary-bg-color);
+            margin: 0 0 20px 0;
+            /* Espace avant les liens */
+        }
+
+        /* --- NOUVEAUX STYLES (Confirmation) --- */
+        .promo-container,
+        .payment-selector {
+            margin-top: 20px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--tertiary-bg-color);
+            display: none;
+        }
+
+        #promo-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        #promo-code-input {
+            flex-grow: 1;
+            padding: 15px;
+            border: none;
+            background: var(--secondary-bg-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        #apply-promo-btn {
+            padding: 15px;
+            /* S'assurer qu'il a la même hauteur */
+            flex-shrink: 0;
+            /* Empêche le bouton de rétrécir */
+        }
+
+        #promo-applied-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--tertiary-bg-color);
+            padding: 15px;
+            border-radius: 10px;
+            color: var(--green-color);
+            font-weight: 500;
+        }
+
+        #promo-applied-container span {
+            margin-right: 10px;
+        }
+
+        #remove-promo-btn {
+            background: none;
+            border: none;
+            color: var(--red-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .payment-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .payment-btn {
+            background: var(--secondary-bg-color);
+            color: var(--hint-color);
+            border: 2px solid var(--secondary-bg-color);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .payment-btn.active {
+            color: var(--text-color);
+            border-color: #489fc9;
+            /* Ta couleur accent */
+            background-color: var(--tertiary-bg-color);
+        }
+
+        /* Style pour le nouveau résumé du panier */
+        /*  #confirmation-summary .summary-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            padding: 5px 0;
+        } */
+        #confirmation-summary .summary-line.total {
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-top: 1px solid var(--tertiary-bg-color);
+            margin-top: 10px;
+            padding-top: 10px;
+            width: 80%;
+            text-align: center;
+        }
+
+        #confirmation-summary .summary-line.discount {
+            color: var(--green-color);
+        }
+
+        .farm-card.unclickable {
+            opacity: 0.8;
+        }
+
+        .product-item-card.unclickable img {
+            opacity: 0.7;
+        }
+
+
+        /* --- NOUVEAU STYLE POUR LA GRILLE DES TARIFS --- */
+
+        .tarifs-grid-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            width: 90%;
+        }
+
+        /* On force les .tarif-item à s'adapter à la grille */
+        #page-product .tarifs-grid-container .tarif-item {
+            /* On veut 2 par ligne, avec 10px de gap.
+       (100% - 10px) / 2 = 50% - 5px */
+            width: calc(50% - 5px);
+            margin-top: 0;
+            box-sizing: border-box;
+            height: 20vh;
+            min-height: 4vh;
+            padding: 10px 5px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* On ajuste la police si ça déborde sur mobile */
+        #page-product .tarifs-grid-container .box-tarif {
+            font-size: 22px;
+            /* Un peu plus petit pour que ça rentre */
+            /* Le reste (width: 80%, etc.) est ok */
+        }
+
+        #page-product .tarifs-grid-container .add-to-cart-btn {
+            /* On s'assure que le bouton 'panier' ne prend pas trop de place */
+            flex-shrink: 0;
+        }
+
+        .filter-select-wrapper:has(#quality-filter) {
+            /* C'est ici que tu mets le style de ton image */
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--secondary-bg-color);
+            margin-top: 3vh;
+            justify-content: center;
+
+            /* Les lignes de ton image : */
+            border-radius: 20px;
+            width: 100%;
+        }
+/* --- STYLE DES CATÉGORIES (BOUTONS) --- */
+
+/* 1. La forme du bouton (Base) */
+.category-card-styled {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px; /* Hauteur uniforme */
+    width: 100%;
+    border-radius: 16px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden; /* Pour que le dégradé ne dépasse pas */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Légère bordure subtile */
+}
+
+/* Effet au clic */
+.category-card-styled:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* 2. Le texte à l'intérieur */
+.category-name-text {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4); /* Ombre portée pour lisibilité */
+    font-family: 'Arial Black', sans-serif;
+    z-index: 2; /* Pour être au-dessus du fond */
+    pointer-events: none; /* Le clic passe au travers */
+}
+
+/* 3. Dégradés Spécifiques (Palette Logo) */
+
+/* HASH : Orange Solaire vers Jaune */
+.cat-gradient-hash {
+    background: linear-gradient(135deg, #FF8C00 0%, #F1C40F 100%);
+}
+
+/* WEED : Vert Profond vers Vert Menthe */
+.cat-gradient-weed {
+    background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+}
+
+/* EXTRACT : Or vers Jaune Pâle */
+.cat-gradient-extract {
+    background: linear-gradient(135deg, #d4af37 0%, #f7e987 100%);
+}
+
+/* EDIBLES : Violet Punch vers Rose */
+.cat-gradient-edibles {
+    background: linear-gradient(135deg, #8E44AD 0%, #D946EF 100%);
+}
+
+/* 4. Optionnel : Petit effet de brillance "Glossy" */
+.category-card-styled::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%);
+    pointer-events: none;
+    transform: rotate(30deg);
+}
+    
+
+/* ==========================================================
+   MAISONFULL — THÈME PASTEL INSPIRÉ DU LOGO
+   ========================================================== */
+:root {
+    --background-color: #efe7ff;
+    --secondary-bg-color: rgba(255, 255, 255, 0.76);
+    --tertiary-bg-color: rgba(116, 77, 164, 0.18);
+    --text-color: #3a2354;
+    --hint-color: #755f8c;
+    --accent-color: #d94fb5;
+    --green-color: #25b77a;
+    --red-color: #e24e75;
+}
+
+body {
+    color: var(--text-color);
+}
+
+.page-header,
+#page-home .home-header {
+    background: linear-gradient(180deg, rgba(136, 91, 190, 0.25), rgba(255,255,255,0));
+}
+
+.page-header .close-button,
+.page-header .back-button {
+    color: #4b2866;
+}
+
+#page-loader {
+    background: rgba(239, 231, 255, 0.93);
+    backdrop-filter: blur(14px);
+}
+
+#page-loader .loader-box,
+#page-contact .contact-card,
+#page-info .contact-card,
+.info-text-container {
+    background: rgba(255,255,255,0.78) !important;
+    border: 1px solid rgba(168, 95, 205, 0.35) !important;
+    box-shadow: 0 12px 35px rgba(92, 54, 129, 0.16);
+    color: #3a2354 !important;
+}
+
+.info-text-container {
+    border-radius: 20px;
+    padding: 20px;
+    line-height: 1.65;
+}
+
+.info-text-container h2 {
+    color: #8b45bb;
+    margin-bottom: 15px;
+}
+
+.home-logo,
+#page-contact .contact-logo,
+#page-info .contact-logo {
+    box-shadow: 0 0 24px rgba(216, 80, 183, 0.45);
+    border: 2px solid rgba(255,255,255,0.75);
+}
+
+.top-marquee {
+    background: rgba(123, 77, 174, 0.18);
+    color: #7a35a6;
+}
+
+#page-home .cart-button {
+    background: rgba(255,255,255,0.82);
+    color: #7d3da7;
+    box-shadow: 0 0 18px rgba(201, 88, 202, 0.35);
+}
+
+.cart-button .cart-count {
+    background: linear-gradient(135deg, #d94fb5, #8b62d7);
+    color: white;
+}
+
+.filter-input-wrapper,
+.filter-select-wrapper,
+.filter-input-wrapper input,
+.filter-select-wrapper select,
+#quality-filter {
+    background: rgba(255,255,255,0.72) !important;
+    color: #3a2354 !important;
+    border-color: #bb76db !important;
+}
+
+.product-card {
+    border: 2px solid rgba(160, 94, 205, 0.65);
+    background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(246,197,237,0.82) 48%, rgba(194,224,255,0.82));
+    box-shadow: 0 10px 24px rgba(91, 55, 126, 0.15);
+}
+
+.product-card .name,
+.product-card .price {
+    color: #37204e;
+}
+
+.product-card .farm,
+.product-details .farm {
+    color: #8a3eb3;
+    border-color: rgba(138,62,179,.28);
+}
+
+.product-flag {
+    background: rgba(255,255,255,0.82);
+}
+
+#page-product .product-details {
+    background: rgba(255,255,255,0.82) !important;
+    border: 1px solid rgba(168,95,205,.35) !important;
+    box-shadow: 0 12px 30px rgba(91,55,126,.14);
+}
+
+.product-details .name,
+.product-description,
+.product-details .tarifs-title {
+    color: #3a2354 !important;
+}
+
+.tarif-item {
+    background: linear-gradient(135deg, rgba(245,184,230,.92), rgba(178,216,255,.92));
+    border: 2px solid #b874d5;
+}
+
+.add-to-cart-btn {
+    background: rgba(255,255,255,.58);
+    border-color: #8c48b2;
+    color: #7a35a6;
+}
+
+.farm-list-btn {
+    background: linear-gradient(145deg, rgba(255,255,255,.88), rgba(226,204,249,.78));
+    border: 1px solid rgba(168,95,205,.28);
+    box-shadow: 0 8px 20px rgba(91,55,126,.12);
+}
+
+.farm-list-btn:active {
+    background: rgba(229,205,248,.92);
+}
+
+.farm-btn-title {
+    color: #43265e;
+}
+
+.farm-btn-right svg {
+    stroke: #9450b8;
+}
+
+.bottom-nav {
+    background: rgba(245, 237, 255, 0.92);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid rgba(139, 79, 180, .18);
+}
+
+.nav-item {
+    background: rgba(255,255,255,.72);
+    color: #6f4889;
+    box-shadow: 0 0 14px rgba(185, 105, 207, .25);
+}
+
+.nav-item.active {
+    color: #7d2fa7;
+    background: linear-gradient(135deg, rgba(239,195,236,.92), rgba(200,221,255,.92));
+}
+
+.cart-item .item-details,
+#page-cart .cart-total,
+#page-confirmation .cart-total {
+    background: rgba(255,255,255,.76);
+    color: #3a2354;
+}
+
+.cart-item .price {
+    color: #8b45bb;
+}
+
+.quantity-selector {
+    background: #8e59b5;
+}
+
+.quantity-selector button,
+.quantity-selector .quantity {
+    color: white;
+}
+
+.cart-summary,
+.main-action-btn {
+    background: linear-gradient(135deg, #e976c7, #8cbdf2);
+    color: #2e1745;
+}
+
+.secondary-action-btn {
+    background: rgba(255,255,255,.74);
+    color: #4a2a65;
+    border: 1px solid rgba(151,89,190,.25);
+}
+
+#notification-toast {
+    background: linear-gradient(135deg, rgba(219,85,183,.95), rgba(120,116,218,.95));
+}
+
+#cart-warning {
+    background: rgba(255,255,255,.68);
+    border: 1px solid rgba(151,89,190,.3);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 15px;
+    font-size: .86rem;
+    color: #51316b;
+    text-align: center;
+}
+
+.category-card-styled {
+    height: 108px;
+    border: 1px solid rgba(255,255,255,.7);
+    box-shadow: 0 10px 26px rgba(79,50,109,.18);
+}
+
+.category-name-text {
+    color: white;
+    font-size: 1.45rem;
+    text-shadow: 0 2px 8px rgba(67,32,84,.35);
+}
+
+.cat-gradient-jaune {
+    background: linear-gradient(135deg, #f4b6dd 0%, #e7a4f2 45%, #a9cffa 100%);
+}
+
+.cat-gradient-filtre {
+    background: linear-gradient(135deg, #b990e6 0%, #e073c1 52%, #8ec9f7 100%);
+}
+
+.cat-gradient-static {
+    background: linear-gradient(135deg, #7957c8 0%, #d85bb8 50%, #7cccf4 100%);
+}
+
+.cat-gradient-frozen {
+    background: linear-gradient(135deg, #8fbdf4 0%, #b6a6ef 48%, #e59bd6 100%);
+}
+
+.cat-gradient-weed {
+    background: linear-gradient(135deg, #bc8de4 0%, #dc64b7 45%, #72c9ec 100%);
+}
+
+.cat-gradient-default {
+    background: linear-gradient(135deg, #b990e6, #e073c1);
+}
+
+
+/* --- CATÉGORIES EN IMAGES UNIQUEMENT --- */
+.category-card.category-card-image-only {
+    background: transparent;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(79,50,109,.18);
+}
+
+.category-card.category-card-image-only .category-card-image {
+    width: 95%;
+    height: 24vh;
+    min-height: 150px;
+    object-fit: cover;
+    display: block;
+    margin: auto;
+    border-radius: 24px;
+    border: 2px solid rgba(255,255,255,.8);
+    box-shadow: 0 8px 20px rgba(73,38,104,.18);
+}
+
+.category-card.category-card-image-only:active .category-card-image {
+    transform: scale(.985);
+}
+
+/* --- CONTACTS STYLE ANCIEN / BOUTONS PLUS VISUELS --- */
+#page-contact .contact-card {
+    background: rgba(255,255,255,.38);
+    border: 1px solid rgba(151,89,190,.25);
+    box-shadow: 0 14px 30px rgba(91,55,120,.12);
+}
+
+.contact-links-list a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 14px;
+    min-height: 56px;
+    height: auto;
+    padding: 14px 16px;
+    border-radius: 16px;
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: .3px;
+    text-shadow: 0 1px 3px rgba(0,0,0,.28);
+    box-shadow: 0 10px 18px rgba(0,0,0,.12);
+    border: 1px solid rgba(255,255,255,.22);
+}
+
+.contact-links-list a svg {
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+}
+
+.contact-link.whatsapp {
+    background: linear-gradient(45deg, #25d366 0%, #1fb65e 50%, #128c7e 100%);
+}
+
+.contact-link.instagram {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 22%, #dc2743 48%, #cc2366 72%, #bc1888 100%);
+}
+
+.contact-link.snapchat {
+    background: linear-gradient(45deg, #fffc00 0%, #ffef73 45%, #b89600 100%);
+    color: #221500 !important;
+    text-shadow: none;
+}
+
+/* ==========================================================
+   MAISONFULL — CATÉGORIES 100% IMAGE + RÉSEAUX STYLE ORIGINAL
+   ========================================================== */
+.category-card {
+    border-radius: 20px;
+    overflow: visible;
+    cursor: pointer;
+}
+
+.category-image-only {
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    background: transparent;
+    box-shadow: 0 10px 25px rgba(82, 45, 116, 0.18);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.category-image-only:active {
+    transform: scale(.985);
+    box-shadow: 0 5px 14px rgba(82, 45, 116, 0.16);
+}
+
+.category-image-only img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+/* Les boutons LINKS gardent les couleurs propres à chaque réseau */
+#page-contact .contact-card {
+    background: rgba(255,255,255,.72) !important;
+    padding: 16px !important;
+}
+
+.contact-links-list {
+    width: 100%;
+}
+
+.contact-links-list a.contact-link {
+    min-height: 64px;
+    height: auto;
+    border-radius: 18px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 1.15rem;
+    font-weight: 900;
+    letter-spacing: .4px;
+    border: 1px solid rgba(255,255,255,.45);
+    box-shadow: 0 8px 18px rgba(45,25,66,.18);
+    text-decoration: none;
+    transition: transform .15s ease, filter .15s ease;
+}
+
+.contact-links-list a.contact-link:active {
+    transform: scale(.985);
+}
+
+.contact-links-list a.contact-link svg {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+}
+
+.contact-link.instagram {
+    color: #fff !important;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 24%, #dc2743 49%, #cc2366 72%, #bc1888 100%) !important;
+}
+
+.contact-link.whatsapp {
+    color: #fff !important;
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%) !important;
+}
+
+.contact-link.snapchat {
+    color: #111 !important;
+    text-shadow: none !important;
+    background: linear-gradient(135deg, #FFFC00 0%, #FFE600 100%) !important;
+    border-color: rgba(0,0,0,.12) !important;
+}
+
+    </style>
+</head>
+
+<body>
+    <div id="page-contact" class="page">
+        <div class="page-content">
+            <img src="Logo.jpg" alt="Logo" class="contact-logo">
+            <div class="contact-card">
+
+                <div id="contact-links-container" class="contact-links-list">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="page-info" class="page">
+        <div class="page-content" style="text-align: center; padding: 20px; font-family: 'Roboto', sans-serif;">
+            <img src="Logo.jpg" alt="Logo" class="contact-logo" >
+            
+            <div class="info-text-container">
+                <h2>BIENVENUE 👋</h2>
+                <p><strong>MAISONFULL 🍭</strong></p>
+                <p>Retrouvez notre sélection, les disponibilités et les tarifs directement dans le menu.</p>
+                <p>🛒 Ajoutez vos articles au panier puis envoyez votre récapitulatif directement sur WhatsApp.</p>
+                <p>📲 Pour nous contacter, rendez-vous dans l’onglet <strong>LINKS</strong> : WhatsApp, Instagram et Snapchat.</p>
+                <p>✨ Les catégories disponibles sont : Jaune Mousseux, Filtré, Static, Frozen et Weed.</p>
+            </div>
+        </div>
+    </div>
+
+    <svg width="0" height="0" style="position:absolute">
+        <defs>
+<symbol id="icon-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </symbol>
+            <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </symbol>
+            <symbol id="icon-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </symbol>
+            <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </symbol>
+            <symbol id="icon-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </symbol>
+            <symbol id="icon-contact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                </path>
+            </symbol>
+            <symbol id="icon-quality" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+            </symbol>
+            <symbol id="icon-farm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.5 9.5L9.5 4.5l-5 5L1 11l4.5 4.5 5-5 4.5-4.5z"></path>
+                <path d="M19.5 14.5L14.5 9.5l-5 5L1 21h8l4.5-4.5 5-5 4.5-4.5z"></path>
+            </symbol>
+            <symbol id="icon-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </symbol>
+<symbol id="icon-whatsapp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                </path>
+            </symbol>
+            <symbol id="icon-snapchat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                    d="M12 1.5C6.2 1.5 1.5 6.2 1.5 12c0 5.8 4.7 10.5 10.5 10.5S22.5 17.8 22.5 12c0-5.8-4.7-10.5-10.5-10.5zm-2.3 12.9c-.3 0-.6-.1-.8-.4-.5-.5-.5-1.3 0-1.8l3.1-3.1c.5-.5 1.3-.5 1.8 0 .5.5.5 1.3 0 1.8l-3.1 3.1c-.2.3-.5.4-.8.4z" />
+            </symbol>
+<symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </symbol>
+            <symbol id="icon-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"></path>
+            </symbol>
+
+        </defs>
+    </svg>
+
+    <div id="page-loader" class="page active">
+        <div class="loader-box">
+            <img src="Logo.jpg" alt="Logo">
+            <div class="app-name"> 🍭 MaisonFull 🍭 </div>
+            <div class="loading-text">Chargement de MaisonFull...</div>
+        </div>
+    </div>
+
+    <div id="page-home" class="page">
+        <div class="top-marquee">
+            <div class="marquee-content">
+                <span>REJOIGNEZ NOS RÉSEAUX 📲</span>
+                <span>REJOIGNEZ NOS RÉSEAUX 📲</span>
+                <span>REJOIGNEZ NOS RÉSEAUX 📲</span>
+                <span>REJOIGNEZ NOS RÉSEAUX 📲</span>
+                <span>REJOIGNEZ NOS RÉSEAUX 📲</span>
+                <span>REJOIGNEZ NOS RÉSEAUX 📲</span>
+            </div>
+        </div>
+        <div class="home-header">
+            <img src="Logo.jpg" alt="Logo" class="home-logo">
+            <button class="cart-button" id="home-cart-button">
+                <svg width="20" height="20">
+                    <use href="#icon-cart" />
+                </svg>
+                <span class="cart-count">0</span>
+            </button>
+        </div>
+
+        <div class="filters">
+            <div class="filter-input-wrapper" style="display:none ;">
+                <svg width="20" height="20">
+                    <use href="#icon-search" />
+                </svg>
+                <input type="text" id="search-filter" placeholder="Rechercher un produit...">
+            </div>
+            <div class="filter-select-wrapper">
+                <!--  <svg width="20" height="20">
+                    <use href="#icon-quality" />
+                </svg> -->
+                <select id="quality-filter"></select>
+            </div>
+            <div class="filter-select-wrapper" style="display:none ;">
+                <!--  <svg width="20" height="20">
+                    <use href="#icon-farm" />
+                </svg> -->
+                <select id="farm-filter"></select>
+            </div>
+        </div>
+        <div id="product-list" class="product-grid">
+        </div>
+    </div>
+
+    <div id="page-product" class="page">
+        <div class="page-header">
+            <button class="back-button">‹</button>
+            <span class="title" id="product-page-title"></span>
+            <button class="close-button">×</button>
+        </div>
+        <div class="page-content">
+            <video class="product-video" poster="https://placehold.co/400x711/000000/ffffff?text=Video"
+                controls></video>
+            <div id="product-details-content" class="product-details">
+            </div>
+        </div>
+    </div>
+
+    <div id="page-cart" class="page">
+        <div class="page-header">
+            <span class="title">Mon Panier</span>
+            <button class="close-button">×</button>
+        </div>
+        <div class="page-content">
+            <div id="cart-items-container">
+            </div>
+        </div>
+        <div class="cart-actions">
+            <div id="cart-warning">🛒 Vérifie ton panier avant d'envoyer la commande sur WhatsApp.</div>
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-price">0.00€</span>
+            </div>
+            <button id="checkout-button" class="main-action-btn">Commander</button>
+            <button id="cart-continue-shopping" class="secondary-action-btn">Continuer les achats</button>
+        </div>
+    </div>
+
+    <div id="page-confirmation" class="page">
+        <div class="page-header">
+            <span class="title">Détails de votre commande</span>
+            <button class="close-button">×</button>
+        </div>
+        <div class="page-content">
+            <div class="cart-summary">
+                <span class="resume">🗓 Résumé de la commande</span>
+                <p>
+                    <span id="confirmation-items-count">0 article</span> <br>
+                    <span class="total">Total: <span id="confirmation-total-price">0.00€</span></span>
+                </p>
+            </div>
+            <h4>Détail des articles</h4>
+            <div id="confirmation-items-list">
+            </div>
+
+            <div class="promo-container">
+                <h4>Code Promo</h4>
+                <div id="promo-input-container">
+                    <input type="text" id="promo-code-input" placeholder="Votre code...">
+                    <button id="apply-promo-btn" class="secondary-action-btn">Appliquer</button>
+                </div>
+                <div id="promo-applied-container" style="display:none;">
+                    <span id="promo-applied-text"></span>
+                    <button id="remove-promo-btn">×</button>
+                </div>
+            </div>
+
+            <div class="payment-selector">
+                <h4>Paiement</h4>
+                <div class="payment-options">
+                    <button class="payment-btn active" data-method="Espèce">💵 Espèce</button>
+                    <button class="payment-btn" data-method="Crypto">₿ Crypto</button>
+                </div>
+            </div>
+
+            <div class="cart-total" id="confirmation-summary">
+            </div>
+            <!--   <div class="cart-total">
+                <span>💰 Total final:</span>
+                <span id="confirmation-final-price">0.00€</span>
+            </div> -->
+        </div>
+        <div class="cart-actions">
+
+            <button id="confirmation-modify-order" class="secondary-action-btn">✏️ Modifier</button>
+
+            <button id="confirm-order-button" class="main-action-btn whatsapp-button" >
+                🚀 Envoyer la commande sur WhatsApp
+            </button>
+</div>
+    </div>
+
+
+    <div class="bottom-nav">
+        <button id="nav-menu" data-page="page-home" class="nav-item active">
+            <svg width="20" height="20">
+                <use href="#icon-home" />
+            </svg>
+            <p style="
+            margin: inherit;"> HOME </p>
+        </button>
+        <button id="nav-info" data-page="page-info" class="nav-item">
+            <svg width="20" height="20">
+                <use href="#icon-info" />
+            </svg>
+            <p style="margin: inherit;"> INFO </p>
+        </button>
+        <button id="nav-contact" data-page="page-contact" class="nav-item">
+            <svg width="20" height="20">
+                <use href="#icon-link" />
+            </svg>
+            <p style="
+            margin: inherit;"> LINKS </p>
+        </button>
+    </div>
+
+    <div id="notification-toast"></div>
+    <script src="script.js"></script>
+</body>
+
+</html>
