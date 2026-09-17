@@ -7,29 +7,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- LIENS DE CONTACT MAISONFULL ---
     const contactLinks = [
+        { 
+            name: 'CANAL TELEGRAM 📢', 
+            url: 'https://t.me/+7jggLAsfcMs3ZTNk', 
+            id: 'canal-tg', 
+            className: 'telegram-main', 
+            text: "CANAL TELEGRAM 📢" 
+        },   
+        { 
+            name: 'POTATO 🥔', 
+            url: 'https://tato.im/MFull', 
+            id: 'potato', 
+            className: 'potato-main', 
+            text: "CANAL POTATO 🥔" 
+        },
+        { 
+            name: 'SIGNAL 🔵', 
+            url: 'https://signal.me/#eu/tG818To7xme0Al0v5KhGJIw1zEHT9zIhsseDaq-7D9hAOtvpkW5BSq1mGXChGcvN', 
+            id: 'signal', 
+            className: 'signal-main', 
+            text: "SIGNAL 🔵" 
+        },
         {
             name: 'WHATSAPP 🟢',
             url: 'https://wa.me/33745400702',
             id: 'whatsapp',
             className: 'whatsapp',
-            icon: '#icon-whatsapp',
-            text: 'WHATSAPP 🟢'
+/*             icon: '#icon-whatsapp',
+ */            text: 'WHATSAPP 🟢'
         },
         {
             name: 'INSTAGRAM 📸',
             url: 'https://www.instagram.com/mfullbeerus?igsh=dWU5dW5mdDdxbWFi&utm_source=qr',
             id: 'instagram',
             className: 'instagram',
-            icon: '#icon-instagram',
-            text: 'INSTAGRAM 📸'
+/*             icon: '#icon-instagram',
+ */            text: 'INSTAGRAM 📸'
         },
         {
             name: 'SNAPCHAT 🟡',
             url: 'https://snapchat.com/t/8cy5pea2',
             id: 'snapchat',
             className: 'snapchat',
-            icon: '#icon-snapchat',
-            text: 'SNAPCHAT 🟡'
+/*             icon: '#icon-snapchat',
+ */            text: 'SNAPCHAT 🟡'
         }
     ];
 
@@ -294,7 +315,7 @@ document.addEventListener('DOMContentLoaded', function () {
         backButton.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg> ${text}`;
         // Style inline pour correspondre à ton design
         backButton.style.cssText = `
-            background: linear-gradient(180deg, black, transparent); 
+                background: linear-gradient(var(--secondary-bg-color), transparent);
             border-bottom: 2px solid #b45bce;
             border-top: none; border-left: none; border-right: none;
             color: #3a2354; padding: 10px 15px; 
@@ -509,9 +530,9 @@ ${product.description ? `<div class="product-description">${product.description}
              <div class="cart-item" style="border-bottom:1px solid #333;">
                 <img src="${item.image}" alt="${item.name}">
                 <div class="item-details">
-                    <div style="color:white; font-weight:bold;">${index + 1}. ${item.name}</div>
-                    <div style="color:#aaa;">Qté: ${item.quantity}x ${item.weight}</div>
-                    <div style="color:#aaa;">PU: ${item.unitPrice.toFixed(2)}€</div>
+                    <div style="color:#40006d; font-weight:bold;">${index + 1}. ${item.name}</div>
+                    <div style="color:#4b4949;">Qté: ${item.quantity}x ${item.weight}</div>
+                    <div style="color:#4b4949;">PU: ${item.unitPrice.toFixed(2)}€</div>
                 </div>
             </div>`).join('');
 

@@ -34,16 +34,13 @@
 
             /* --- MODIFICATION POUR LE FOND D'ÉCRAN --- */
             /* Remplace 'fond-ecran.jpg' par le nom de ton image */
-            background-image: radial-gradient(circle at 12% 8%, rgba(218, 132, 239, 0.55), transparent 34%), radial-gradient(circle at 88% 12%, rgba(119, 190, 255, 0.55), transparent 38%), linear-gradient(160deg, #efe7ff 0%, #dfeaff 48%, #f9d9ef 100%);
+                       background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('Fondecran.png');
             background-size: cover;
-            /* L'image couvre tout l'espace */
             background-position: center center;
-            /* L'image est centrée */
             background-repeat: no-repeat;
-            /* L'image ne se répète pas */
             background-attachment: fixed;
-            /* L'image reste fixe au défilement */
             margin-bottom: 8vh;
+
         }
 
         /* --- Structure générale des pages --- */
@@ -979,6 +976,20 @@
 .contact-link.instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 .contact-link.snapchat { background: linear-gradient(45deg, #fffc00 0%, #6f5900 100%); color: #000 !important; }
 .contact-link.whatsapp { background: linear-gradient(45deg, #25d366 0%, #128c7e 100%); }
+.contact-link.telegram-main {
+    background: linear-gradient(135deg, #0088cc 0%, #005f8f 100%);
+    box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
+}
+
+.contact-link.potato-main {
+    background: linear-gradient(135deg, #6d4c41 0%, #d4a05e 100%);
+    box-shadow: 0 4px 15px rgba(109, 76, 65, 0.4);
+}
+
+.contact-link.signal-main {
+    background: linear-gradient(135deg, #43416d 0%, #6c5ed4 100%);
+    box-shadow: 0 4px 15px rgba(109, 76, 65, 0.4);
+}
 
 /* Ajustement global des liens pour la lisibilité */
 .contact-links-list a {
@@ -1322,7 +1333,7 @@ body {
 
 .page-header,
 #page-home .home-header {
-    background: linear-gradient(180deg, rgba(136, 91, 190, 0.25), rgba(255,255,255,0));
+    background: linear-gradient(180deg, rgb(255 255 255 / 59%), rgb(58 35 84 / 19%));
 }
 
 .page-header .close-button,
@@ -1689,6 +1700,7 @@ body {
     width: 28px;
     height: 28px;
     flex: 0 0 28px;
+        display: none;
 }
 
 .contact-link.instagram {
