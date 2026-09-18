@@ -1669,7 +1669,6 @@ body {
     background: rgba(255,255,255,.72) !important;
     padding: 16px !important;
 }
-
 .contact-links-list {
     width: 100%;
 }
@@ -1682,25 +1681,37 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    font-size: 1.15rem;
-    font-weight: 900;
-    letter-spacing: .4px;
-    border: 1px solid rgba(255,255,255,.45);
-    box-shadow: 0 8px 18px rgba(45,25,66,.18);
+    padding: 14px 18px;
     text-decoration: none;
     transition: transform .15s ease, filter .15s ease;
+    border: 1px solid rgba(255,255,255,.45);
+    box-shadow: 0 8px 18px rgba(45,25,66,.18);
+    text-align: center;
 }
 
 .contact-links-list a.contact-link:active {
     transform: scale(.985);
 }
 
-.contact-links-list a.contact-link svg {
-    width: 28px;
-    height: 28px;
-    flex: 0 0 28px;
-        display: none;
+.contact-link-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+    width: 100%;
+}
+
+.contact-link-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.contact-link-subtitle {
+    font-size: 0.95rem;
+    font-weight: 500;
+    opacity: 0.9;
+    margin-top: 4px;
 }
 
 .contact-link.instagram {
@@ -1718,6 +1729,21 @@ body {
     text-shadow: none !important;
     background: linear-gradient(135deg, #FFFC00 0%, #FFE600 100%) !important;
     border-color: rgba(0,0,0,.12) !important;
+}
+
+.contact-link.telegram-main {
+    color: #fff !important;
+    background: linear-gradient(135deg, #6a5acd 0%, #b57edc 100%) !important;
+}
+
+.contact-link.potato-main {
+    color: #fff !important;
+    background: linear-gradient(135deg, #8c6b3f 0%, #c89b5d 100%) !important;
+}
+
+.contact-link.signal-main {
+    color: #fff !important;
+    background: linear-gradient(135deg, #2c0cec 0%, #03146f 100%) !important;
 }
 
     </style>

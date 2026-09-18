@@ -7,53 +7,55 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- LIENS DE CONTACT MAISONFULL ---
     const contactLinks = [
-        { 
-            name: 'CANAL TELEGRAM 📢', 
-            url: 'https://t.me/+7jggLAsfcMs3ZTNk', 
-            id: 'canal-tg', 
-            className: 'telegram-main', 
-            text: "CANAL TELEGRAM 📢" 
-        },   
-        { 
-            name: 'POTATO 🥔', 
-            url: 'https://tato.im/MFull', 
-            id: 'potato', 
-            className: 'potato-main', 
-            text: "CANAL POTATO 🥔" 
-        },
-        { 
-            name: 'SIGNAL 🔵', 
-            url: 'https://signal.me/#eu/tG818To7xme0Al0v5KhGJIw1zEHT9zIhsseDaq-7D9hAOtvpkW5BSq1mGXChGcvN', 
-            id: 'signal', 
-            className: 'signal-main', 
-            text: "SIGNAL 🔵" 
-        },
-        {
-            name: 'WHATSAPP 🟢',
-            url: 'https://wa.me/33745400702',
-            id: 'whatsapp',
-            className: 'whatsapp',
-/*             icon: '#icon-whatsapp',
- */            text: 'WHATSAPP 🟢'
-        },
-        {
-            name: 'INSTAGRAM 📸',
-            url: 'https://www.instagram.com/mfullbeerus?igsh=dWU5dW5mdDdxbWFi&utm_source=qr',
-            id: 'instagram',
-            className: 'instagram',
-/*             icon: '#icon-instagram',
- */            text: 'INSTAGRAM 📸'
-        },
-        {
-            name: 'SNAPCHAT 🟡',
-            url: 'https://snapchat.com/t/8cy5pea2',
-            id: 'snapchat',
-            className: 'snapchat',
-/*             icon: '#icon-snapchat',
- */            text: 'SNAPCHAT 🟡'
-        }
-    ];
-
+    { 
+        name: 'Canal TELEGRAM', 
+        url: 'https://t.me/+7jggLAsfcMs3ZTNk', 
+        id: 'canal-tg', 
+        className: 'telegram-main', 
+        text: 'Canal Telegram 📲',
+        subtitle: '(Voir les produits magasin)'
+    },
+    { 
+        name: 'POTATO', 
+        url: 'https://tato.im/MFull', 
+        id: 'potato', 
+        className: 'potato-main', 
+        text: 'Potato 🥔',
+        subtitle: '(Garder notre contact)'
+    },
+    { 
+        name: 'SIGNAL', 
+        url: 'https://signal.me/#eu/tG818To7xme0Al0v5KhGJIw1zEHT9zIhsseDaq-7D9hAOtvpkW5BSq1mGXChGcvN', 
+        id: 'signal', 
+        className: 'signal-main', 
+        text: 'Signal 🛜',
+        subtitle: '(Garder notre contact)'
+    },
+    {
+        name: 'WHATSAPP',
+        url: 'https://wa.me/33745400702',
+        id: 'whatsapp',
+        className: 'whatsapp',
+        text: 'Whatsapp 💬',
+        subtitle: '(Commander)'
+    },
+    {
+        name: 'INSTAGRAM',
+        url: 'https://www.instagram.com/mfullbeerus?igsh=dWU5dW5mdDdxbWFi&utm_source=qr',
+        id: 'instagram',
+        className: 'instagram',
+        text: 'Instagram 🎥',
+        subtitle: '(Suivre l’actualité)'
+    },
+    {
+        name: 'SNAPCHAT',
+        url: 'https://snapchat.com/t/8cy5pea2',
+        id: 'snapchat',
+        className: 'snapchat',
+        text: 'Snapchat 👻',
+        subtitle: '(Suivre l’actualité)'
+    }
+];
     // --- DONNÉES MAISONFULL ---
     // Les catégories sans produit restent volontairement vides en attendant leurs tarifs.
     const appData = [
@@ -566,13 +568,17 @@ ${product.description ? `<div class="product-description">${product.description}
 
     // --- ACTIONS DIVERSES ---
     function renderContactPage() {
-        const linksContainer = document.getElementById('contact-links-container');
-        linksContainer.innerHTML = contactLinks.map(link => `
+    const linksContainer = document.getElementById('contact-links-container');
+
+    linksContainer.innerHTML = contactLinks.map(link => `
         <a href="${link.url}" class="contact-link ${link.className}" target="_blank">
-            <svg width="24" height="24"><use href="${link.icon}"/></svg>
-            <span>${link.text}</span>
-        </a>`).join('');
-    }
+            <div class="contact-link-text">
+                <div class="contact-link-title">${link.text}</div>
+                <div class="contact-link-subtitle">${link.subtitle}</div>
+            </div>
+        </a>
+    `).join('');
+}
 
     function updateCartCount() {
         const count = cart.reduce((sum, item) => sum + item.quantity, 0);
